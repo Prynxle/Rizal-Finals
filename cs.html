@@ -6,6 +6,20 @@
     <title>CS Works - Rizalismo</title>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </div>
     
 <div id="hero-slides">
     <div id="header">
@@ -14,7 +28,7 @@
         <div id="drawer-menu" class="drawer">
           <nav class="drawer-content">
             <a href="index.html" class="drawer-item">Home</a>
-            <a href="#" class="drawer-item">Computer Science Works</a>
+            <a href="cs.html" class="drawer-item">Coursemate Works</a>
           </nav>
           <div class="drawer-overlay"></div>
         </div>
@@ -25,7 +39,7 @@
       <div class="button" id="next"></div>
       <div class="button" id="prev"></div>
       <div id="slides">
-        <div class="slide" style="background-image: url('cs/toniii.png');">
+        <div class="slide" style="background-image: url('cs/toni3.PNG');">
           <div class="number">01</div>
           <div class="body">
             <div class="location">Antonette Martinez</div>
@@ -34,7 +48,7 @@
           </div>
         </div>
 
-        <div class="slide" style="background-image: url('cs/jrizz2.png')">
+        <div class="slide" style="background-image: url('cs/jrizz1.PNG')">
           <div class="number">02</div>
           <div class="body">
             <div class="location">Arianne Cielo</div>
@@ -74,7 +88,7 @@
             <div class="number">06</div>
             <div class="body">
               <div class="location">Audney Mae Bermas</div>
-              <div class="headline">Poster</div>
+              <div class="headline">Movie Poster</div>
               <div class="link" onclick="showPopup('project5')">View Project</div>
             </div>
           </div>
@@ -133,7 +147,7 @@
     <div class="popup-content">
       <span class="close-popup" onclick="closePopup('project4')">&times;</span>
       <h2>Spoken Poetry</h2>
-      <p>This poem about Leonor has inspired me to create a spoken poetry piece so that I can properly convey José Rizal’s feelings—his grief and agony—for his childhood sweetheart of 11 years. Beyond that, I can deeply relate to Rizal, as I have experienced the same kind of heartbreak. I want to take this opportunity to let out all the sadness and emotions, just as Rizal poured his feelings into his.</p>
+      <p>This poem about Leonor has inspired me to create a spoken poetry piece so that I can properly convey José Rizal's feelings—his grief and agony—for his childhood sweetheart of 11 years. Beyond that, I can deeply relate to Rizal, as I have experienced the same kind of heartbreak. I want to take this opportunity to let out all the sadness and emotions, just as Rizal poured his feelings into his.</p>
       <div class="project-links">
         <a href="https://www.canva.com/design/DAGkqXTWSw8/egfq3eC8rD8mFNHOOSRO2g/edit?utm_content=DAGkqXTWSw8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" class="project-link">View Powerpoint</a>
       </div>
@@ -146,9 +160,9 @@
       <h2>Poetry</h2>
       <p>Kadena ng Kolonyalismo, Antok ng makabagong panahon by Stephany de Castro
         dahilan ng pagpili
-        “Makatuwiran pa rin ba na
+        "Makatuwiran pa rin ba na
          dahilan sa katamaran ng mga Filipino ang
-        kolonisasyon sa kasalukuyang panahon?”</p>
+        kolonisasyon sa kasalukuyang panahon?"</p>
       <div class="project-links">
         <a href="https://www.canva.com/design/DAGlUMJ8-pQ/QZzJKYGjEqtB1Si7iv3TnQ/edit" class="project-link">View Powerpoint</a>
       </div>
@@ -161,7 +175,7 @@
       <h2>Infographic/Movie Poster</h2>
       <p>The Echoes of Your Voice | L&W of Rizal of Rizal by Odd Louie
 
-        In Jose Rizal’s The Memories of a Student in Manila (Chapter 6), he tells his story of meeting Segunda Katigbak. She is recognised as his first love, serving as an inspiration for his early poetry. 
+        In Jose Rizal's The Memories of a Student in Manila (Chapter 6), he tells his story of meeting Segunda Katigbak. She is recognised as his first love, serving as an inspiration for his early poetry. 
         
         Background
         story </p>
@@ -176,5 +190,18 @@
 
 
 <script src="Main.js"></script>
+<script>
+    // Hide loading screen when everything is loaded
+    window.addEventListener('load', function() {
+        const loadingScreen = document.getElementById('loadingScreen');
+
+        setTimeout(() => {
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 1000);
+        }, 3000); 
+    });
+</script>
 </body>
 </html>

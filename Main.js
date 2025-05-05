@@ -67,11 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	menu.addEventListener('click', toggleDrawer);
 	drawerOverlay.addEventListener('click', toggleDrawer);
 
-	// Close drawer when clicking a menu item
-	document.querySelectorAll('.drawer-item').forEach(item => {
-		item.addEventListener('click', toggleDrawer);
-	});
-
 	// Popup Functionality
 	window.showPopup = function(popupId) {
 		const popup = document.getElementById(popupId);
@@ -130,6 +125,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (e.key === 'ArrowRight' && currentPage < maxPageCount()) {
 			goToPage(currentPage + 1);
 		}
+
+		// List of keys that cause scrolling
+		const scrollKeys = [
+			'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+			'PageUp', 'PageDown', 'Home', 'End',
+			'Space'
+		];
+		
+		if (scrollKeys.includes(e.key)) {
+			e.preventDefault();
+		}
 	});
 
 	// Handle window resize
@@ -139,4 +145,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// Initialize page
 	goToPage(0);
+
+	// Parallax Effect
+	const layers = document.querySelectorAll('.parallax-layer');
+	
+	function moveLayers(e) {
+		const x = e.clientX / window.innerWidth;
+		const y = e.clientY / window.innerHeight;
+		
+		layers.forEach((layer, index) => {
+			const speed = (index + 1) * 0.1;
+			const xMove = (x - 0.5) * speed * 100;
+			const yMove = (y - 0.5) * speed * 100;
+			
+			layer.style.transform = `translate(${xMove}px, ${yMove}px)`;
+		});
+	}
+	
+	document.addEventListener('mousemove', moveLayers);
 });

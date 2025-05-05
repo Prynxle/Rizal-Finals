@@ -9,6 +9,15 @@ body {
   color: white;
   overflow-x: hidden;
   overflow-y: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  perspective: 1px;
+  transform-style: preserve-3d;
+  background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 a {
@@ -385,8 +394,8 @@ a {
   .popup-content {
     border-radius: 8px;
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 30%;
+    left: 25%;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     transform: translate(-50%, -50%);
     background: #25303c;
@@ -437,12 +446,15 @@ a {
   position: fixed;
   top: 0;
   right: -300px;
-  width: 300px;
+  width: 200px;
   height: 100vh;
-  background: #25303c;
-  transition: transform 0.3s ease-in-out;
+  background: rgba(37, 48, 60, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px 0 15px rgba(0, 0, 0, 0.3);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .drawer.open {
@@ -458,30 +470,176 @@ a {
   display: block;
   padding: 15px 20px;
   color: white;
-  font-size: 1.2em;
   text-decoration: none;
-  transition: background-color 0.2s ease;
-  border-radius: 4px;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 1002;
+  position: relative;
+  margin: 8px 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 1.1em;
+  letter-spacing: 0.5px;
+}
+
+.drawer-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: #0d96f2;
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+  border-radius: 0 4px 4px 0;
 }
 
 .drawer-item:hover {
-  background-color: #0d96f2;
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.drawer-item:hover::before {
+  transform: scaleY(1);
 }
 
 .drawer-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background-color: transparent;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease;
-  z-index: 999;
+  transition: all 0.3s ease;
+  z-index: 779;
 }
 
 .drawer.open .drawer-overlay {
   opacity: 1;
   visibility: visible;
+}
+
+/* Loading Animation */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #191925;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Smooth Scroll Behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scroll Progress Bar */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: #0d96f2;
+  z-index: 1000;
+  transition: width 0.1s ease-out;
+}
+
+/* Back to Top Button */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  background: #0d96f2;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  transform: translateY(-5px);
+  background: #0b7bc9;
+}
+
+/* Hide scrollbars but keep functionality */
+html {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+html::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Parallax Background */
+.parallax-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.parallax-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+}
+
+.layer-1 {
+    background-image: url('images/parallax1.jpg');
+    transform: translateZ(-2px) scale(3);
+    opacity: 0.3;
+}
+
+.layer-2 {
+    background-image: url('images/parallax2.jpg');
+    transform: translateZ(-1px) scale(2);
+    opacity: 0.2;
+}
+
+.layer-3 {
+    background-image: url('images/parallax3.jpg');
+    transform: translateZ(0) scale(1);
+    opacity: 0.1;
 }
