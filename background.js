@@ -127,7 +127,7 @@ function animate() {
 }
 
 // Typing animation
-const text = "In the echoes of time, who truly was Rizal?";
+const text = '“Ang hindi marunong lumingon sa pinanggalingan ay hindi makararating sa paroroonan.” — Jose Rizal';
 const typingText = document.querySelector('.typing-text');
 let charIndex = 0;
 
