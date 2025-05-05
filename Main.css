@@ -1,12 +1,14 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:100,100i,400,900,800i");
+
 body {
   --slides-per-page: 2;
   margin: 0;
-  overflow: hidden;
+
   height: 100vh;
   font-family: "Roboto Condensed", sans-serif;
   color: white;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 a {
@@ -48,23 +50,40 @@ a {
   bottom: 0;
   cursor: pointer;
   padding: 0 3vw;
+  z-index: 1001;
 }
 #hero-slides #header #menu:before {
   font-size: 1.75vh;
-  content: "Home";
+  content: "Menu";
   margin-right: 0.5em;
   text-transform: uppercase;
+  transition: opacity 0.3s ease;
+}
+#hero-slides #header #menu.open:before {
+  opacity: 0;
 }
 #hero-slides #header #menu #hamburger {
   display: inline-block;
+  cursor: pointer;
+  padding: 15px;
+  z-index: 1001;
+  position: relative;
 }
 #hero-slides #header #menu #hamburger .slice {
   background: white;
-  height: 0.2vh;
-  width: 1vw;
+  height: 2px;
+  width: 25px;
+  margin: 6px 0;
+  transition: all 0.3s ease;
 }
-#hero-slides #header #menu #hamburger .slice:not(:last-child) {
-  margin-bottom: 0.5vh;
+#hero-slides #header #menu.open #hamburger .slice:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+#hero-slides #header #menu.open #hamburger .slice:nth-child(2) {
+  opacity: 0;
+}
+#hero-slides #header #menu.open #hamburger .slice:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
 }
 #hero-slides #slides-cont {
   position: relative;
@@ -155,6 +174,8 @@ a {
   position: absolute;
   transform: translate3D(calc(var(--page) * -80vw), 0, 0);
   transition: 1500ms transform cubic-bezier(0.7, 0, 0.3, 1);
+  overflow: visible; /* Make sure this is visible */
+
 }
 #hero-slides #slides .slide {
   display: inline-block;
@@ -400,3 +421,67 @@ a {
   .link {
     cursor: pointer;
   }
+
+  @media (min-width: 1700px) {
+    body {
+      --slides-per-page: 4; /* Fix the variable name */
+    }
+  
+    #hero-slides #slides .slide {
+      font-size: 0.75vw;
+    }
+  }
+
+/* Drawer Menu Styles */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100vh;
+  background: #25303c;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.drawer.open {
+  transform: translateX(-300px);
+}
+
+.drawer-content {
+  padding: 20px;
+  padding-top: 80px;
+}
+
+.drawer-item {
+  display: block;
+  padding: 15px 20px;
+  color: white;
+  font-size: 1.2em;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+}
+
+.drawer-item:hover {
+  background-color: #0d96f2;
+}
+
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+.drawer.open .drawer-overlay {
+  opacity: 1;
+  visibility: visible;
+}

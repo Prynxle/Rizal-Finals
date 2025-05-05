@@ -1,106 +1,142 @@
-let hero = document.getElementById('hero-slides');
-let menu = document.getElementById('menu');
-let slides = document.getElementById('slides');
-let credits = document.getElementById('credits');
-let next = [ 'next', 'next-catch' ].map(n => document.getElementById(n));
-let prev = [ 'prev', 'prev-catch' ].map(n => document.getElementById(n));
-let slideChildren = slides.children;
-let slideCount = slides.children.length;
-let currentlyDemoing = false;
-let currentPage = 0;
-let slidesPerPage = () => window.innerWidth > 1700 ? 4 : window.innerWidth > 1200 ? 3 : 2;
-let maxPageCount = () => slideCount / slidesPerPage() - 1;
+// Initialize all interactive elements
+document.addEventListener('DOMContentLoaded', function() {
+	// Slider functionality
+	let hero = document.getElementById('hero-slides');
+	let menu = document.getElementById('menu');
+	let slides = document.getElementById('slides');
+	let next = ['next', 'next-catch'].map(n => document.getElementById(n));
+	let prev = ['prev', 'prev-catch'].map(n => document.getElementById(n));
+	let slideChildren = slides.children;
+	let slideCount = slides.children.length;
+	let currentPage = 0;
 
-function goToPage(pageNumber = 0) {
-	currentPage = Math.min(maxPageCount(), Math.max(0, pageNumber));
-	console.log(currentPage);
-	hero.style.setProperty('--page', currentPage);
-}
-
-function sleep(time) {
-	return new Promise(res => setTimeout(res, time));
-}
-
-function hoverSlide(index) {
-	index in slideChildren &&
-		slideChildren[index].classList.add('hover');
-}
-
-function unhoverSlide(index) {
-	index in slideChildren &&
-		slideChildren[index].classList.remove('hover');
-}
-
-async function demo() {
-	if(currentlyDemoing) {
-		return;
+	// Calculate slides per page based on screen width
+	function slidesPerPage() {
+		if (window.innerWidth > 1700) return 4;
+		if (window.innerWidth > 1200) return 3;
+		return 2;
 	}
-	currentlyDemoing = true;
-	if(currentPage !== 0) {
-		goToPage(0);
-		await sleep(800);
+
+	function maxPageCount() {
+		return Math.floor((slideCount - 1) / slidesPerPage());
 	}
-	let slides = slidesPerPage();
-	let pageSeq_ = { 2: [ 1, 2, 1 ], 3: [ 1, 2, 1 / 3 ], 4: [ 1, 1, 0 ] };
-	let pageSeq = pageSeq_[slides] || pageSeq_[4];
-	let slideSeq_ = { 2: [ 2, 4, 3 ], 3: [ 3, 6, 2 ], 4: [ 3, 6, 2 ] };
-	let slideSeq = slideSeq_[slides] || slideSeq_[2];
-	await sleep(300);
-	goToPage(pageSeq[0]);
-	await sleep(500);
-	hoverSlide(slideSeq[0]);
-	await sleep(1200);
-	goToPage(pageSeq[1]);
-	credits.classList.add('hover');
-	unhoverSlide(slideSeq[0]);
-	await sleep(500);
-	hoverSlide(slideSeq[1]);
-	await sleep(1200);
-	goToPage(pageSeq[2]);
-	unhoverSlide(slideSeq[1]);
-	await sleep(300);
-	hoverSlide(slideSeq[2]);
-	await sleep(1600);
+
+	function updateSlideVisibility() {
+		const spp = slidesPerPage();
+		const startIdx = currentPage * spp;
+		const endIdx = Math.min(startIdx + spp, slideCount);
+
+		// Update prev/next button visibility
+		prev.forEach(p => p.style.opacity = currentPage === 0 ? '0.5' : '1');
+		next.forEach(n => n.style.opacity = currentPage >= maxPageCount() ? '0.5' : '1');
+
+		// Calculate transform
+		const translateX = currentPage * -80;
+		slides.style.transform = `translate3D(${translateX}vw, 0, 0)`;
+	}
+
+	function goToPage(pageNumber = 0) {
+		const maxPage = maxPageCount();
+		currentPage = Math.min(maxPage, Math.max(0, pageNumber));
+		updateSlideVisibility();
+	}
+
+	// Initialize slider navigation
+	next.forEach(n => n.addEventListener('click', () => {
+		if (currentPage < maxPageCount()) {
+			goToPage(currentPage + 1);
+		}
+	}));
+
+	prev.forEach(p => p.addEventListener('click', () => {
+		if (currentPage > 0) {
+			goToPage(currentPage - 1);
+		}
+	}));
+
+	// Drawer Menu Functionality
+	const drawer = document.querySelector('.drawer');
+	const drawerOverlay = document.querySelector('.drawer-overlay');
+
+	function toggleDrawer(event) {
+		if (event) event.stopPropagation();
+		menu.classList.toggle('open');
+		drawer.classList.toggle('open');
+	}
+
+	menu.addEventListener('click', toggleDrawer);
+	drawerOverlay.addEventListener('click', toggleDrawer);
+
+	// Close drawer when clicking a menu item
+	document.querySelectorAll('.drawer-item').forEach(item => {
+		item.addEventListener('click', toggleDrawer);
+	});
+
+	// Popup Functionality
+	window.showPopup = function(popupId) {
+		const popup = document.getElementById(popupId);
+		const content = popup.querySelector('.popup-content');
+		
+		popup.style.display = 'block';
+		document.body.style.overflow = 'hidden';
+		
+		// Add entrance animation
+		content.style.opacity = '0';
+		content.style.transform = 'translateY(20px)';
+		
+		setTimeout(() => {
+			content.style.transition = 'all 0.3s ease';
+			content.style.opacity = '1';
+			content.style.transform = 'translateY(0)';
+		}, 50);
+	};
+
+	window.closePopup = function(popupId) {
+		const popup = document.getElementById(popupId);
+		popup.style.display = 'none';
+		document.body.style.overflow = 'auto';
+	};
+
+	// Close popup when clicking outside
+	window.onclick = function(event) {
+		if (event.target.classList.contains('popup')) {
+			event.target.style.display = 'none';
+			document.body.style.overflow = 'auto';
+		}
+	};
+
+	// Handle keyboard events
+	document.addEventListener('keydown', function(e) {
+		// Close drawer on Escape
+		if (e.key === 'Escape' && drawer.classList.contains('open')) {
+			toggleDrawer();
+		}
+		
+		// Close any open popup on Escape
+		if (e.key === 'Escape') {
+			const popups = document.getElementsByClassName('popup');
+			for (let popup of popups) {
+				if (popup.style.display === 'block') {
+					popup.style.display = 'none';
+					document.body.style.overflow = 'auto';
+				}
+			}
+		}
+
+		// Handle arrow key navigation
+		if (e.key === 'ArrowLeft' && currentPage > 0) {
+			goToPage(currentPage - 1);
+		}
+		if (e.key === 'ArrowRight' && currentPage < maxPageCount()) {
+			goToPage(currentPage + 1);
+		}
+	});
+
+	// Handle window resize
+	window.addEventListener('resize', function() {
+		goToPage(Math.min(currentPage, maxPageCount()));
+	});
+
+	// Initialize page
 	goToPage(0);
-	unhoverSlide(slideSeq[2]);
-	credits.classList.remove('hover');
-	currentlyDemoing = false;
-}
-
-next.forEach(n => n.addEventListener('click', () => !currentlyDemoing && goToPage(currentPage + 1)));
-prev.forEach(n => n.addEventListener('click', () => !currentlyDemoing && goToPage(currentPage - 1)));
-menu.addEventListener('click', demo);
-
-sleep(100).then(demo);
-
-// Simple popup functions
-function showPopup(popupId) {
-  document.getElementById(popupId).style.display = 'block';
-  // Prevent scrolling on the background
-  document.body.style.overflow = 'hidden';
-}
-
-function closePopup(popupId) {
-  document.getElementById(popupId).style.display = 'none';
-  // Restore scrolling
-  document.body.style.overflow = 'auto';
-}
-
-// Close popup when clicking outside the content
-window.onclick = function(event) {
-  if (event.target.className === 'popup') {
-    event.target.style.display = 'none';
-    document.body.style.overflow = 'auto';
-  }
-}
-
-// Close popup when ESC key is pressed
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    var popups = document.getElementsByClassName('popup');
-    for (var i = 0; i < popups.length; i++) {
-      popups[i].style.display = 'none';
-    }
-    document.body.style.overflow = 'auto';
-  }
 });
