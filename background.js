@@ -145,7 +145,7 @@ function typeWriter() {
 // Initial delay before starting any animations
 setTimeout(() => {
     // Start typing animation after initial delay
-    setTimeout(typeWriter, 10000);
+    setTimeout(typeWriter, 3000);
     
     // Show welcome message after typing completes
     setTimeout(() => {
